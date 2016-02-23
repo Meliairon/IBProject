@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
-
 import uk.ac.cam.quebec.dbwrapper.Database;
 import uk.ac.cam.quebec.kgsearchwrapper.APIConstants;
 import uk.ac.cam.quebec.trends.Trend;
@@ -16,6 +15,8 @@ import uk.ac.cam.quebec.twitterwrapper.TwitterLink;
 import uk.ac.cam.quebec.userapi.APIServerAbstract;
 import uk.ac.cam.quebec.userapi.NewAPIServer;
 import uk.ac.cam.quebec.wikiproc.WikiProcessor;
+import uk.ac.cam.quebec.kgsearchwrapper.APIConstants;
+import uk.ac.cam.quebec.util.parsing.StopWords;
 //import uk.ac.cam.quebec.havenapi.APIConstants;
 
 /**
@@ -205,13 +206,13 @@ public class GroupProjectCore extends Thread implements TrendsQueue, ControlInte
     }
 
     @Override
-    public void repopulateTrends() {
-        try {
+    public void repopulateTrends() throws TwitException{
+       // try {
             getTrends();
-        } catch (TwitException ex) {
+       /* } catch (TwitException ex) {
             System.err.println("Error repopulating trends");
             System.err.println(ex);
-        }
+        }*/
     }
 
     @Override
@@ -243,5 +244,15 @@ public class GroupProjectCore extends Thread implements TrendsQueue, ControlInte
     @Override
     public long timeUntilRepopulate() {
         return refreshTask.remainingTime();      
+    }
+
+    @Override
+    public void forceRepopulate() {
+        refreshTask.forceRefresh();
+    }
+
+    @Override
+    public void clearAllTasks() {
+      workAllocator.clearAllTasks();
     }
 }
